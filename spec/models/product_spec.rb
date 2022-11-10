@@ -18,6 +18,12 @@ RSpec.describe Product, type: :model do
     expect(product.errors.full_messages.first).to eq("Title can't be blank")
   end
 
+  it "is invalid if title is less than 10" do
+    product.title = "ruby book"
+    expect(product).to_not be_valid
+    expect(product.errors.full_messages.first).to eq("Title can't be less than 10 characters")
+  end
+
   it "is invalid if the same title exists in the database" do
     create(:product)
     product.title = "Programming Crystal"
