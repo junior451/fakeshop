@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :product do
     title { 'Programming Crystal' }
-    description  { 'Crystal is for Ruby programmers who want more performance' }
+    description  { Faker::Lorem.paragraph(sentence_count: 1) }
     image_url { 'lorem.jpg' }
     price { 11.99 }
   end

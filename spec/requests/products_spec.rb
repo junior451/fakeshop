@@ -2,21 +2,22 @@ require 'rails_helper'
 
 RSpec.describe "Products", type: :request do
   describe "GET /index" do
+    let(:product) { create(:product) }
+    
     it "assigns all products" do
-      product = create(:product)
-
       get "/products"
 
       expect(assigns(:products)) == ([product])
     end
 
     it "should render the index template" do
-      create(:product)
+      product = create(:product)
+      
       get "/products"
 
       expect(response).to render_template("index")
-      expect(response.body).to include("Programming Crystal")
-      expect(response.body).to include("Crystal is for Ruby programmers who want more performance")
+      expect(response.body).to include(product.title)
+      expect(response.body).to include(product.description)
     end
 
     it "returns the correct response" do
@@ -94,7 +95,7 @@ RSpec.describe "Products", type: :request do
       delete "/products/#{product.id}"
 
       follow_redirect!
-      
+
       expect(response.body).to include("Product was successfully destroyed.")
       expect(Product.count).to eq 0
     end
