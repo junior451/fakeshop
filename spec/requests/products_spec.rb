@@ -100,4 +100,17 @@ RSpec.describe "Products", type: :request do
       expect(Product.count).to eq 0
     end
   end
+
+  describe "deleting a product already in a cart" do
+    let(:line_item) { create(:line_item) }  
+
+    it "should not be able to be deleted" do
+      delete "/products/#{line_item.product.id}"
+
+      follow_redirect!
+
+      expect(response.body).to include("Line Items present")
+      expect(Product.count).to eq 1
+    end
+  end
 end

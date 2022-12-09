@@ -2,6 +2,8 @@
   <aside id="notice"><%= notice %></aside>
 <% end %>
 
+<%= session[:counter] if session[:counter] > 5 %>
+
 <h1>Products</h1>
 
 <table>

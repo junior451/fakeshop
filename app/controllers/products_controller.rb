@@ -1,6 +1,8 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: [:show, :edit, :update, :destroy]
+  include CurrentCart
 
+  before_action :set_product, only: [:show, :edit, :update, :destroy]
+  
   def index
     @products = Product.all
   end
@@ -42,11 +44,14 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    @product.destroy
-    
     respond_to do |format|
-      format.html { redirect_to products_path, notice: 'Product was successfully destroyed.' }
-      format.json { head :no_content }
+      if @product.destroy
+        format.html { redirect_to products_path, notice: 'Product was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to products_path, notice: @product.errors }
+        format.json { render json: @product.errors, status: :unprocessable_entity }
+      end
     end
   end
 
