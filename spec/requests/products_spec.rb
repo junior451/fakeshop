@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe "Products", type: :request do
   describe "GET /index" do
     let(:product) { create(:product) }
+
+    before do
+      session = {counter: 3}
+      allow_any_instance_of(ProductsController).to receive(:session).and_return(session)
+    end
     
     it "assigns all products" do
       get "/products"
@@ -88,29 +93,41 @@ RSpec.describe "Products", type: :request do
     end
   end
 
-  describe "delete an exisiting" do
-    let(:product) { create(:product) }
 
-    it "should delete a product based on its id" do
-      delete "/products/#{product.id}"
-
-      follow_redirect!
-
-      expect(response.body).to include("Product was successfully destroyed.")
-      expect(Product.count).to eq 0
+  describe "Deleting products" do
+    before do
+      session = {counter: 3}
+      allow_any_instance_of(ProductsController).to receive(:session).and_return(session)
     end
-  end
 
-  describe "deleting a product already in a cart" do
-    let(:line_item) { create(:line_item) }  
+    context "deleting an exisiting" do
+      let(:product) { create(:product) }
+  
+      it "should delete a product based on its id" do
+        delete "/products/#{product.id}"
+  
+        follow_redirect!
+  
+        expect(response.body).to include("Product was successfully destroyed.")
+        expect(Product.count).to eq 0
+      end
+    end
 
-    it "should not be able to be deleted" do
-      delete "/products/#{line_item.product.id}"
+    context "deleting a product which doesnt exist" do
+      
+    end
 
-      follow_redirect!
-
-      expect(response.body).to include("Line Items present")
-      expect(Product.count).to eq 1
+    context "deleting a product already in a cart" do
+      let(:line_item) { create(:line_item) }  
+  
+      it "should not be able to be deleted" do
+        delete "/products/#{line_item.product.id}"
+  
+        follow_redirect!
+  
+        expect(response.body).to include("Line Items present")
+        expect(Product.count).to eq 1
+      end
     end
   end
 end

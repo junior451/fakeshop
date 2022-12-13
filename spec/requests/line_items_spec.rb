@@ -10,9 +10,8 @@ RSpec.describe "LineItems", type: :request do
       follow_redirect!
 
       expect(LineItem.first.product_id).to eq(product.id)
-      expect(response.body).to include("Line item was successfully created")
       expect(response.body).to include(product.title)
-
+      expect(response.body).to include(LineItem.first.cart.total_price.to_s)
     end  
   end
 

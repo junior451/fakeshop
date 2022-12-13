@@ -1,24 +1,5 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a shopping app based off of the tutorial from the Agile Web Development Rails 6 book
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+I'm not strictly following the tutorial as I have introduced new technologies and gems such as the rails annotate gem  and using FactoryBot and rspec instead of Minitest and fixtures. I have also modified the app in parts in order to fit my current understanding of rails as well as just learning about different/new approaches in rails
