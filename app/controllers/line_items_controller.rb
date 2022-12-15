@@ -1,7 +1,7 @@
 class LineItemsController < ApplicationController
   include CurrentCart
 
-  before_action :set_cart, only: [:create]
+  before_action :set_cart, only: [:create, :destroy]
 
   def create
     product = Product.find(params[:product_id])
@@ -16,6 +16,18 @@ class LineItemsController < ApplicationController
         format.html { render :new }
         format.json { render json: @line_item.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def destroy
+    line_item = LineItem.find(params[:id])
+    title = line_item.product.title
+
+    respond_to do |format|
+      if line_item.destroy
+        format.html { redirect_to @cart, notice: "Your item #{title} has been destroyed" }
+        format.json { head :no_content }
+      end  
     end
   end
 

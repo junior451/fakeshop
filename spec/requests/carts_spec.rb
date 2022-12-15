@@ -5,7 +5,9 @@ RSpec.describe "Carts", type: :request do
     let(:line_item) { create(:line_item) }
 
     it "returns the correct response" do
-
+      session = {cart_id: line_item.cart.id}
+      allow_any_instance_of(CartsController).to receive(:session).and_return(session)
+      
       get "/carts/#{line_item.cart.id}"
 
       expect(response.body).to include(line_item.product.title)

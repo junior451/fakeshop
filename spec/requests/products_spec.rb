@@ -3,11 +3,6 @@ require 'rails_helper'
 RSpec.describe "Products", type: :request do
   describe "GET /index" do
     let(:product) { create(:product) }
-
-    before do
-      session = {counter: 3}
-      allow_any_instance_of(ProductsController).to receive(:session).and_return(session)
-    end
     
     it "assigns all products" do
       get "/products"
@@ -95,11 +90,6 @@ RSpec.describe "Products", type: :request do
 
 
   describe "Deleting products" do
-    before do
-      session = {counter: 3}
-      allow_any_instance_of(ProductsController).to receive(:session).and_return(session)
-    end
-
     context "deleting an exisiting" do
       let(:product) { create(:product) }
   

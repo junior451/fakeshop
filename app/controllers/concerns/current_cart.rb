@@ -1,8 +1,6 @@
 module CurrentCart
   private
-
-  attr_reader :counter
-
+  
   def set_cart
     @cart = Cart.find(session[:cart_id])
   rescue ActiveRecord::RecordNotFound
