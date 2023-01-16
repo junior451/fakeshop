@@ -3,7 +3,7 @@ class CartsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
 
   def show
-    redirect_to store_index_url, notice: 'Authorised Cart' if @cart.id != session[:cart_id] 
+    redirect_to store_index_url, notice: 'Unauthorised Cart' if @cart.id != session[:cart_id] 
   end
 
   def destroy
