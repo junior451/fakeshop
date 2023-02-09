@@ -1,0 +1,35 @@
+<% total = 0 %>
+
+<table>
+  <tr> 
+    <th>Name</th>
+    <th>Address</th>
+    <th>Email</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Payment Type</th>
+  <tr>
+
+  <% @orders.each do |order| %>
+    <% item = order.get_product_item(@product) %>
+    <tr>
+      <td><%= order.name %></td>
+      <td><%= order.address %></td>
+      <td><%= order.email %></td>
+      <td><%= item.quantity %></td>
+      <td><%= item.total_price %></td>
+      <% total += item.total_price %>
+      <td><%= order.paytype %></td>
+    </tr>
+  <% end %>
+</table>
+
+<br/>
+<table>
+  <tr>
+    <th>Total Revenue</th>
+  </tr>
+  <tr>
+    <td><%= number_to_currency(total) %></td>
+  </tr>
+</table>

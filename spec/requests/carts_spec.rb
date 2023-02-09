@@ -23,11 +23,11 @@ RSpec.describe "Carts", type: :request do
 
       delete "/carts/#{session[:cart_id]}"
 
+      expect(Cart.count).to eq(0)
       
       follow_redirect!
 
       expect(response.body).to include("Your cart is empty")
-      expect(Cart.count).to eq(0)
     end
 
   end

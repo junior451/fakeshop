@@ -120,4 +120,43 @@ RSpec.describe "Products", type: :request do
       end
     end
   end
+
+  describe "who bought" do
+    let(:product) { create(:product) }
+
+    before do
+      2.times { post "/line_items?product_id=#{product.id}" }
+    end
+
+    it "displays the all orders for a specific product" do
+      order = create(:order)
+      order2 = create(:order, name: "leroy mane", address: "40 westeros avenue", paytype: 2 )
+
+      order.line_items << LineItem.first
+
+      line_item2 = create(:line_item, product_id: product.id)
+
+      order2.line_items << line_item2
+
+      get "/products/#{product.id}/who_bought"
+
+
+      expect(response.body).to include(order.name)
+      expect(response.body).to include(order.address)
+      expect(response.body).to include(order.email)
+      expect(response.body).to include(order.paytype)
+      expect(response.body).to include(LineItem.first.quantity.to_s)
+      expect(response.body).to include(LineItem.first.total_price.to_s)
+
+      expect(response.body).to include(order2.name)
+      expect(response.body).to include(order2.address)
+      expect(response.body).to include(order2.email)
+      expect(response.body).to include(order2.paytype)
+      expect(response.body).to include(line_item2.quantity.to_s)
+      expect(response.body).to include(line_item2.total_price.to_s)
+
+      expect(response.body).to include((order.get_product_item(product).total_price + 
+        order2.get_product_item(product).total_price).to_s)
+    end
+  end
 end

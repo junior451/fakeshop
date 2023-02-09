@@ -15,6 +15,10 @@ require 'rails_helper'
 RSpec.describe Product, type: :model do  
   let(:product) { build(:product) }
 
+  it "is instantiated by RSpec" do
+    expect(subject).to be_a(Product)
+  end
+
   it "is valid with attributes" do
     expect(product).to be_valid
   end
