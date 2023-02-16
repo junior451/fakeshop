@@ -1,7 +1,5 @@
 import consumer from "./consumer"
 
-console.log("came here")
-
 consumer.subscriptions.create({ channel: "ProductsChannel" }, {
   connected() {
     console.log("connected!")
@@ -13,10 +11,10 @@ consumer.subscriptions.create({ channel: "ProductsChannel" }, {
   },
 
   received(data) {
-    console.log("Received: ", data)
-    // const storeElement = document.querySelector("main.store")
-    // if (storeElement) {
-    //   storeElement.innerHTML = data.html
-    // }
+    const storeElement = document.querySelector("main.store")
+    
+    if (storeElement) {
+      storeElement.innerHTML = data.html
+    }
   }
 });

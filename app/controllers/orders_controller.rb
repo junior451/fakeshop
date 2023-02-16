@@ -35,6 +35,16 @@ class OrdersController < ApplicationController
     params.require(:order).permit(:name, :address, :email, :paytype)
   end
 
+  def paytype_params
+    if(order_params[:paytype] == "Credit card")
+      params.require(:order).permit(:credit_card_number, :expiration_date)
+    elsif(order_params[:paytype] == "Check")
+      params.require(:order).permit(:routing_number, :account_number)
+    elsif(order_params[:paytype] == "Purchasing order")
+      params.require(:order).permit(:po_number)
+    end
+  end
+
   def ensure_cart_isnt_empty
     if @cart.line_items.empty?
       redirect_to store_index_url, notice: "Your cart is empty"

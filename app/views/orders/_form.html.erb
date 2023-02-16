@@ -28,9 +28,7 @@
   </div>
 
   <div class="field">
-    <%= form.label :pay_type %>
-    <%= form.select :paytype, Order.paytypes.keys,
-                  prompt: 'Select a payment method' %>
+    <div id="pay-type-component"></div>
   </div>
 
   <div class="actions">
