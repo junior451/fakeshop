@@ -47,9 +47,6 @@ RSpec.describe "LineItems", type: :request do
         expect(response.body).to include(product1.title)
         expect(response.body).to include(product2.title)
         expect(response.body).to include((product1.price + product2.price).to_s)
-
-
-
       end
     end
   end
@@ -87,5 +84,4 @@ RSpec.describe "LineItems", type: :request do
       end
     end
   end
-
 end

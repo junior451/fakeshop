@@ -12,9 +12,9 @@
 #
 FactoryBot.define do
   factory :order do
-    name { "my order" }
+    name { "Jay Coleman" }
     address { "34 Spedhall Rd" }
-    email { "MyText@gmail.co" }
+    email { "colemanj@gmail.co" }
     paytype { 1 }
   end
 end
