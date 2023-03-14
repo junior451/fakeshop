@@ -33,4 +33,34 @@ class Order < ApplicationRecord
     line_items.where(product_id: product.id).first
   end
 
+  def charge!(paytype_params)
+    payment_info = {}
+    payment_method = nil
+
+    case paytype
+    when "Check"
+      payment_info[:routing_no] = paytype_params[:routing_number]
+      payment_info[:account_no] = paytype_params[:account_number]
+
+      payment_type = PaymentTypes::Check.new
+      
+    when "Credit card"
+      payment_info[:cc_no] = paytype_params[:credit_card_number]
+      payment_info[:expiration_date] = paytype_params[:expiration_date]
+
+      payment_type = PaymentTypes::CreditCard.new
+    when "Purchase order"
+      payment_info[:po_no] = paytype_params[:po_number]
+    end
+
+    payment_result = Services::Pago.new.make_payment(id, payment_type, payment_info)
+
+    p payment_result.succeeded
+
+    if payment_result.succeeded
+      OrderMailer.received(self).deliver_later
+    else
+      p "payment_result.error"
+    end
+  end
 end
