@@ -55,12 +55,10 @@ class Order < ApplicationRecord
 
     payment_result = Services::Pago.new.make_payment(id, payment_type, payment_info)
 
-    p payment_result.succeeded
-
     if payment_result.succeeded
       OrderMailer.received(self).deliver_later
     else
-      p "payment_result.error"
+      Rails.logger.info("payment error")
     end
   end
 end
