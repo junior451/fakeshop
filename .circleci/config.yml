@@ -1,0 +1,51 @@
+version: 2.1
+
+jobs:   
+  test:
+    docker:
+      - image: circleci/ruby:2.7.0-node-browsers
+      - image: circleci/postgres:12.8
+        environment:
+          RAILS_ENV: test
+          BUNDLE_JOBS: "3"
+          BUNDLE_RETRY: "3"
+          POSTGRES_USER: fakeshop
+          POSTGRES_PASSWORD: fakeshop1
+          POSTGRES_DB: fakeshop_test
+          PGHOST: 127.0.0.1
+
+    parallelism: 3      
+    working_directory: ~/app  
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies-
+            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v1-node-modules-
+      - run:
+          name: Install dependencies
+          command: |
+            bundle install --jobs 4 --retry 3
+            yarn install --frozen-lockfile
+            bundle exec rails assets:precompile
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }} 
+          paths:
+            - vendor/bundle
+            - node_modules
+
+      - run:
+          name: Setup DB and run tests
+          command: |
+            bin/rails db:drop db:create db:migrate RAILS_ENV=test
+            bundle exec rspec
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
