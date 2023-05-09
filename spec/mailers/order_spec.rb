@@ -27,6 +27,9 @@ RSpec.describe OrderMailer, type: :mailer do
     let(:line_item) { create(:line_item, product_id: product.id, quantity: 3) }
     let(:mail) { OrderMailer.shipped(order) }
 
+    before do
+      order.line_items << line_item
+    end
 
     it "renders the headers" do
       expect(mail.subject).to eq("Pragmatic Store Order Shipped")
@@ -35,11 +38,10 @@ RSpec.describe OrderMailer, type: :mailer do
     end
 
     it "renders the body" do
-      order.line_items << line_item
       expect(mail.body.encoded).to include("Pragmatic Order Shipped")
       expect(mail.body.encoded).to include("This is just to let you know that we've shipped your recent order")
-      expect(mail.body.encoded).to include(line_item.quantity.to_s)
-      expect(mail.body.encoded).to include(line_item.total_price.to_s)
+      expect(mail.body.encoded).to include("#{line_item.quantity.to_s} x #{product.title}")
+      expect(mail.body.encoded).to include("Total Cost: #{sprintf("£%d", line_item.total_price)}")
     end
   end
 

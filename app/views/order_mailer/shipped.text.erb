@@ -1,10 +1,12 @@
 <<h3>Pragmatic Order Shipped</h3>
 <p>
   This is just to let you know that we've shipped your recent order:
-  <%= @order.ship_date.localtime.strftime("Shipped on %m/%d/%y")  %>
+  <%= @order.ship_date.localtime.strftime("Shipped on %d/%m/%y")  %>
 </p>
 
 <table>
-  <tr><th colspan="2">Qty</th><th>Description</th></tr>
-<%= render @order.line_items -%>
+  <tr><th colspan="2">Qty</th><th>Description</th><th>Price</th></tr>
+  <%= render @order.line_items %>
+  <p>Total Cost: <%= sprintf("£%d", @order.line_items.map(&:total_price).inject(:+)) %></p>
+
 </table>

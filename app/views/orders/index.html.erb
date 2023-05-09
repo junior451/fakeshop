@@ -13,7 +13,7 @@
     <tr>
       <td>Order #<%= order.id %></td>
       <td>Customer: <%= order.name %></td>
-      <td>Date: <%= order.created_at.localtime.strftime("%m/%d/%y") %></td>
+      <td>Date: <%= order.created_at.localtime.strftime("%d/%m/%y") %></td>
       <td>
         <%= form_with(model: order, url: order_path(order), method: :put, local: true) do |form| %>
           <%= form.hidden_field :ship_date, value: DateTime.now %>
@@ -31,7 +31,7 @@
     <tr>
       <td>Order #<%= order.id %>|</td>
       <td>Customer: <%= order.name %>|</td>
-      <td>Date Shipped: <%= order.ship_date.localtime.strftime("%m/%d/%y") %></td>
+      <td>Date Shipped: <%= order.ship_date.localtime.strftime("%d/%m/%y") %></td>
     <tr>
   <% end %>  
 </table>

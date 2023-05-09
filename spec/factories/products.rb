@@ -15,13 +15,13 @@ FactoryBot.define do
     title { 'Programming Crystal' }
     description  { Faker::Lorem.paragraph(sentence_count: 1) }
     image_url { 'lorem.jpg' }
-    price { 11.99 }
+    price { 11 }
   end
 
   factory :product_line_item, class: "Product" do
     title { 'Ruby on Rails Book ' }
     description  { Faker::Lorem.paragraph(sentence_count: 1) }
     image_url { 'lorem.jpg' }
-    price { 20.00 }
+    price { 20 }
   end
 end

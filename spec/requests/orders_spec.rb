@@ -72,8 +72,9 @@ RSpec.describe "Orders", type: :request do
       expect(mail.to).to eq([order.email])
       expect(mail.from).to eq(["depot@example.com"])
       expect(mail.body.encoded.to_s).to include("This is just to let you know that we've shipped your recent order")
-      expect(mail.body.encoded.to_s).to include("Shipped on #{order.ship_date.localtime.strftime("%m/%d/%y")}")
+      expect(mail.body.encoded.to_s).to include("Shipped on #{order.ship_date.localtime.strftime("%d/%m/%y")}")
       expect(mail.body.encoded.to_s).to include("3 x Ruby on Rails Book")
+      expect(mail.body.encoded.to_s).to include("Total Cost: £60")
     end
   end
 end
