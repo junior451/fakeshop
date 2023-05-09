@@ -56,14 +56,14 @@ RSpec.describe "LineItems", type: :request do
       let(:item) { create(:line_item) }
       
       it "doesnt delete the item" do
-        delete "/line_items/decrement/#{item.id}"
+        delete decrement_line_item_path(item)
 
         expect(LineItem.first.quantity).to eq 1
       end
 
       it "outputs the correct message on the page" do
 
-        delete "/line_items/decrement/#{item.id}"
+        delete decrement_line_item_path(item)
 
         follow_redirect!
 
@@ -78,7 +78,7 @@ RSpec.describe "LineItems", type: :request do
         item.quantity = 2
         item.save
 
-        delete "/line_items/decrement/#{item.id}"
+        delete decrement_line_item_path(item)
 
         expect(LineItem.first.quantity).to eq 1
       end

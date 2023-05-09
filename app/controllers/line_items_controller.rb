@@ -51,10 +51,4 @@ class LineItemsController < ApplicationController
       end  
     end
   end
-
-  private
-
-  def line_item_params
-    params.require(:line_item).permit(:product_id)
-  end
 end

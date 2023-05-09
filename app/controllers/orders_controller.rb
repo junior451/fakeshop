@@ -2,7 +2,11 @@ class OrdersController < ApplicationController
   include CurrentCart
   before_action :set_cart, only: [:new, :create]
   before_action :ensure_cart_isnt_empty, only: :new
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_order, only: [:update]
+
+  def index
+    @orders = Order.all
+  end
 
   def new
     @order = Order.new
@@ -21,7 +25,21 @@ class OrdersController < ApplicationController
         format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new }
-        format.json { render :josn, @order.errors, status: :unprocessable_entity }
+        format.json { render :json, @order.errors, status: :unprocessable_entity }
+      end
+    end
+  end  
+
+
+  def update
+    respond_to do |format|
+      if @order.update(shipdate_params)
+        OrderMailer.shipped(@order).deliver_later
+        format.html { redirect_to orders_url, notice: "Order ##{@order.id} has been shipped and shipping date has been updated" }
+        format.json { render :show, status: :ok, location: @order }
+      else
+        format.html { redirect_to orders_url, notice: "Order wasn't successfully shipped" }
+        format.json { render :json, @order.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -44,6 +62,10 @@ class OrdersController < ApplicationController
     elsif(order_params[:paytype] == "Purchasing order")
       params.require(:order).permit(:po_number)
     end
+  end
+
+  def shipdate_params
+    params.require(:order).permit(:ship_date)
   end
 
   def ensure_cart_isnt_empty

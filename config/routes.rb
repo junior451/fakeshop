@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   resources :products do
     get :who_bought, on: :member
   end
-  resources :line_items
-  delete "line_items/decrement/:id" => "line_items#decrement"
+  resources :line_items do
+    delete :decrement, on: :member
+  end
   resources :carts
 end

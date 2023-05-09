@@ -16,5 +16,6 @@ FactoryBot.define do
     address { "34 Spedhall Rd" }
     email { "colemanj@gmail.co" }
     paytype { 1 }
+    ship_date { DateTime.now }
   end
 end

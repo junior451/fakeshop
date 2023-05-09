@@ -11,7 +11,7 @@
           data: { confirm: 'Are you sure?' } %>
   </td>
 
-  <td><%= button_to 'Decrement', "line_items/decrement/#{line_item.id}",
+  <td><%= button_to 'Decrement', decrement_line_item_url(line_item),
           method: :delete, remote: true %>
   </td>
 </tr>

@@ -53,5 +53,11 @@ RSpec.describe 'Place Order', type: :system, js: true do
     expect(order.address).to eq("30 Speed Rd")
     expect(order.email).to eq("creede2@gmail.com")
     expect(order.paytype).to eq("Credit card")
+
+    mail = ActionMailer::Base.deliveries.last
+
+    expect(mail.to.first).to eq order.email
+    expect(mail[:from].value).to eq "fakeshop <depot@example.com>"
+    expect(mail.subject).to eq "Pragmatic Store Order Confirmation"
   end
 end

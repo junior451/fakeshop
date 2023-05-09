@@ -1,17 +1,38 @@
+<% if notice %>
+  <aside id="notice"><%= notice %></aside>
+<% end %>
+
+
+<h2>Order Summary:</h2>
+<p>Total Pending Orders: <%= @orders.where(ship_date: nil).count %></p>
+<p>Orders Shipped: <%= @orders.where.not(ship_date: nil).count %></p>
+<h3>Recent Orders:</h3>
+
 <table>
-  <tr>
-    <th>Title</th>
-    <th>Name</th>
-    <th>Address</th>
-    <th>Product</th>
-    <th>Quantity</th>
-    <th>Total price</th>
-  </tr>
-  <% @orders.each do |order| %>
+  <% @orders.where(ship_date: nil).each do |order| %>
     <tr>
-      <td><%= order.id %> </td>
-      <td><%= order.name %> </td>
-      <td><%= order.address %> </td>
-    </tr>
-  <% end %> 
-</table> 
+      <td>Order #<%= order.id %></td>
+      <td>Customer: <%= order.name %></td>
+      <td>Date: <%= order.created_at.localtime.strftime("%m/%d/%y") %></td>
+      <td>
+        <%= form_with(model: order, url: order_path(order), method: :put, local: true) do |form| %>
+          <%= form.hidden_field :ship_date, value: DateTime.now %>
+          <%= form.submit 'Ship Order!' %>
+        <% end %>
+      </td>
+    <tr>
+  <% end %>  
+</table>
+
+<h3>Shipped Orders:</h3>
+
+<table>
+  <% @orders.where.not(ship_date: nil).each do |order| %>
+    <tr>
+      <td>Order #<%= order.id %>|</td>
+      <td>Customer: <%= order.name %>|</td>
+      <td>Date Shipped: <%= order.ship_date.localtime.strftime("%m/%d/%y") %></td>
+    <tr>
+  <% end %>  
+</table>
+
