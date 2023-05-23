@@ -29,6 +29,21 @@ RSpec.describe "Carts", type: :request do
 
       expect(response.body).to include("Your cart is empty")
     end
+  end
+
+  describe "Invalid cart" do
+    it "enques the an email which will be sent to the system administrator about the error" do
+      expect { get "/carts/4" }.to have_enqueued_job(ActionMailer::MailDeliveryJob)
+    end
+
+    it "logs the error and redirect to the store page" do
+      allow(Rails.logger).to receive(:error)
+
+      get "/carts/4"
+
+      expect(response).to redirect_to(store_index_url)
+      expect(Rails.logger).to have_received(:error).with("Attempted to access invalid cart 4")
+    end
 
   end
 
