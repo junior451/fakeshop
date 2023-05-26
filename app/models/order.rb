@@ -49,16 +49,17 @@ class Order < ApplicationRecord
       payment_info[:expiration_date] = paytype_params[:expiration_date]
 
       payment_type = PaymentTypes::CreditCard.new
+      
     when "Purchase order"
       payment_info[:po_no] = paytype_params[:po_number]
     end
 
     payment_result = Services::Pago.new.make_payment(id, payment_type, payment_info)
-
+    
     if payment_result.succeeded
       OrderMailer.received(self).deliver_later
     else
-      Rails.logger.info("payment error")
+      ErrorsMailer.payment_failure(self).deliver_later
     end
   end
 end

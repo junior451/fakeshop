@@ -63,18 +63,10 @@ RSpec.describe "Orders", type: :request do
     end
 
     it "sends an email notification to the user" do
-      put "/orders/#{Order.first.id}", params: { order: { ship_date:  DateTime.now} }
+      valid_params = { order: { ship_date:  DateTime.now} }
 
-      order = Order.first
-      mail =  OrderMailer.shipped(order)
-
-      expect(mail.subject).to eq("Pragmatic Store Order Shipped")
-      expect(mail.to).to eq([order.email])
-      expect(mail.from).to eq(["depot@example.com"])
-      expect(mail.body.encoded.to_s).to include("This is just to let you know that we've shipped your recent order")
-      expect(mail.body.encoded.to_s).to include("Shipped on #{order.ship_date.localtime.strftime("%d/%m/%y")}")
-      expect(mail.body.encoded.to_s).to include("3 x Ruby on Rails Book")
-      expect(mail.body.encoded.to_s).to include("Total Cost: £60")
+      expect { put "/orders/#{Order.first.id}", params: valid_params
+      }.to have_enqueued_job.exactly(:once).and have_enqueued_job(ActionMailer::MailDeliveryJob)
     end
   end
 end

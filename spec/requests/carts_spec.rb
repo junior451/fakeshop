@@ -32,7 +32,7 @@ RSpec.describe "Carts", type: :request do
   end
 
   describe "Invalid cart" do
-    it "enques the an email which will be sent to the system administrator about the error" do
+    it "enqeues the an email which will be sent to the system administrator about the error" do
       expect { get "/carts/4" }.to have_enqueued_job(ActionMailer::MailDeliveryJob)
     end
 

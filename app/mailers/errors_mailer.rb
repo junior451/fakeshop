@@ -11,4 +11,10 @@ class ErrorsMailer < ApplicationMailer
 
     mail to: "user1@example.com", subject: 'System Error Invalid cart'
   end
+
+  def payment_failure(order)
+    @order = order
+
+    mail to: @order.email, subject: 'Failed to process payment info'
+  end
 end

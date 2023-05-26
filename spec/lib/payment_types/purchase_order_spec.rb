@@ -1,5 +1,5 @@
 require 'rails_helper'
-RSpec.describe PaymentTypes::CreditCard do
+RSpec.describe PaymentTypes::PurchaseOrder do
   describe '#make_payment' do
     let(:check_type) { PaymentTypes::PurchaseOrder.new }
     let(:payment_info) { {po_no: "1234433342434"} }

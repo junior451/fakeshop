@@ -5,7 +5,7 @@ class CreditCardPayType extends React.Component {
     return (
       <div>
         <div className="field">
-          <label htmlFor="order_credit_card_number">CC #</label>
+          <label htmlFor="order_credit_card_number">CC</label>
           <input type="password"
                  name="order[credit_card_number]" 
                  id="order_credit_card_number" />
