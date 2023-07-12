@@ -66,12 +66,10 @@ RSpec.describe "Products", type: :request do
 
   describe "edit an existing product" do
     let(:product) { create(:product) }
-
-    before do
-      get "/products/#{product.id}/edit"
-    end
-
+    
     it "should render the edit page" do
+      get "/products/#{product.id}/edit"
+
       expect(response).to render_template("edit")
     end
 

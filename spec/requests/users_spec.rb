@@ -99,4 +99,89 @@ RSpec.describe "Users", type: :request do
       expect(response.body).to include(users.last[:username])
     end
   end
+
+  describe "edit" do
+    it "should render the correct template" do
+      user = create(:user, username: "user1")
+
+      get edit_user_path(user)
+      
+      expect(response).to render_template("edit")
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe "editing a user's username" do
+    
+    context "when the new username doesn't already exist" do
+      let(:user) { create(:user, username: "user1") }
+      let(:valid_params) { { user: { username: "new_username" } } }
+  
+      before do
+        put "/users/#{user.id}", params: valid_params
+      end
+
+      it "changes the username of the user" do
+        expect(User.first.username).to eq("new_username")
+      end
+
+      it "redirects to users page" do
+        expect(response).to redirect_to("/users")
+
+        follow_redirect!
+
+        expect(response.body).to include(User.first.username)
+      end
+
+      it "response with the correct status" do
+        follow_redirect!
+
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when the username already exist" do
+      it "doesn't change the username and responds with an error message" do
+        user = create(:user, username: "user21")
+        user2 = create(:user, username: "user25")
+
+        put "/users/#{user2.id}", params: { user: { username: user.username } }
+
+        expect(response).to render_template(:edit)
+        expect(response.body).to include("Username has already been taken")
+        expect(User.second.username).to eq(user2.username)
+        expect(response.status).to eq(422)
+      end
+    end
+  end
+
+  describe "deleting a user" do
+    let(:user) { create(:user) }
+
+    it "removes the user from the database and redirects to the users page" do
+      delete "/users/#{user.id}"
+
+      expect(response).to redirect_to(users_path)
+
+      follow_redirect!
+
+      expect(User.count).to eq 0
+      expect(response.body).to_not include(user.username)
+      expect(response.status).to eq 200
+    end
+
+    context "when the user doesn't exist" do
+      it "redirects to the users page with an error message" do
+        delete "/users/1"
+
+        expect(response).to redirect_to(users_path)
+
+        follow_redirect!
+
+        expect(response.body).to include("User cannot be found")
+        expect(response.status).to eq 200
+      end
+    end
+  end
+
 end

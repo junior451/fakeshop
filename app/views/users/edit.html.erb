@@ -1,0 +1,31 @@
+<h1>Edit User</h1>
+
+<% if @user.present? && @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %>
+      prohibited this product from being saved:</h2>
+
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+<%= form_with model: @user, local: true do |form| %>
+  <div class="field">
+    <%= form.label :username %>
+    <%= form.text_field :username, size: 20 %>
+  </div>
+
+  <br/>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
+
+<%= link_to 'Back', users_path %>
