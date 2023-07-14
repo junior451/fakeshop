@@ -1,5 +1,5 @@
 class AdminController < ApplicationController
   def home
-    @total_orders = Order.where(ship_date: nil).count
+    @total_orders = Order.unshipped.count
   end
 end

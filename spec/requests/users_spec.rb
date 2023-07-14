@@ -43,8 +43,8 @@ RSpec.describe "Users", type: :request do
 
         expect(response.body).to include("Welcome Admin")
   
-        total_unshipped_order = Order.where(ship_date: nil).count
-        expect(response.body).to include("We have #{total_unshipped_order} order")
+        total_no_unshipped_orders = Order.unshipped.count
+        expect(response.body).to include("We have #{total_no_unshipped_orders} order")
       end
     end
     

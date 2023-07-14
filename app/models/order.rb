@@ -22,6 +22,8 @@ class Order < ApplicationRecord
   validates :name, :address, :email, :paytype, presence: true
   validates :paytype, inclusion: paytypes.keys
 
+  scope :unshipped, -> { where(ship_date: nil) }
+
   def add_line_items_from_cart(cart)
     cart.line_items.each do |item|
       item.cart_id = nil
