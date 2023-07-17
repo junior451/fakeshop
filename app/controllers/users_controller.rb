@@ -42,15 +42,19 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    respond_to do |format|
-      if @user&.destroy
-        format.html { redirect_to users_path, notice: "User has been successfully deleted" }
-        format.json { head :no_content }
-      else
-        format.html { redirect_to users_path, notice: "User cannot be found" }
-        format.json { render json: "User cannot be found", status: 404 }
+    begin
+      respond_to do |format|
+        if @user&.destroy
+          format.html { redirect_to users_path, notice: "User has been successfully deleted" }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to users_path, notice: "User cannot be found" }
+          format.json { render json: "User cannot be found", status: 404 }
+        end
       end
-    end  
+    rescue User::Error => exception
+      redirect_to users_url, notice: exception.message
+    end
   end
 
   private

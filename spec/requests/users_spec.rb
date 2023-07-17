@@ -156,17 +156,22 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "deleting a user" do
-    let(:user) { create(:user) }
+    let(:users) {
+      build_list(:user, 3) do |record,i| 
+        record.username = record.username + i.to_s
+        record.save!
+      end
+    }
 
     it "removes the user from the database and redirects to the users page" do
-      delete "/users/#{user.id}"
+      delete "/users/#{users[0].id}"
 
       expect(response).to redirect_to(users_path)
 
       follow_redirect!
 
-      expect(User.count).to eq 0
-      expect(response.body).to_not include(user.username)
+      expect(User.count).to eq 2
+      expect(response.body).to_not include(users[0].username)
       expect(response.status).to eq 200
     end
 
@@ -180,6 +185,21 @@ RSpec.describe "Users", type: :request do
 
         expect(response.body).to include("User cannot be found")
         expect(response.status).to eq 200
+      end
+    end
+
+    context "when there only one user exist" do
+      it "should not delete the user and respond with a message" do
+        user = create(:user)
+
+        delete "/users/#{user.id}"
+
+        expect(response).to redirect_to(users_path)
+
+        follow_redirect!
+
+        expect(response.body).to include("Cant delete last user")
+        expect(User.count).to eq(1)
       end
     end
   end

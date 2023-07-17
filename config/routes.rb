@@ -1,8 +1,9 @@
-Rails.application.routes.draw do
+Rails.application.routes.draw do  
   root 'store#index', as: 'store_index'
+  get 'admin/home' => 'admin#home', as: 'admin'
 
   resources :orders
-  
+
   resources :products do
     get :who_bought, on: :member
   end
@@ -14,5 +15,9 @@ Rails.application.routes.draw do
   resources :carts
   resources :users
 
-  get 'admin/home' => 'admin#home', as: 'admin'
+  controller :session do
+    get "login" => :new
+    post "login" => :create
+    get "logout" => :logout
+  end
 end
