@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Create Product', type: :system do
   it "allows new products to be created" do
+    login
+    
     visit products_path
 
     click_link 'New Product'

@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Show Product', type: :system do
   it "shows the details of a speciific product" do
+    login
+    
     product = create(:product)
 
     visit products_path

@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "Products", type: :request do
+  before do
+    login
+  end
+  
   describe "GET /index" do
     let(:product) { create(:product) }
     

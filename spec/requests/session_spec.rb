@@ -46,9 +46,11 @@ RSpec.describe "Sessions", type: :request do
     it "should destroy the current session and rediret to login path" do
       login_with_valid_user
 
-      get "/logout"
+      expect(session[:user_id]).to eq User.first.id
+      
+      delete "/logout"
 
-      expect(session[:id]).to be_nil
+      expect(session[:user_id]).to be_nil
       expect(response).to redirect_to(login_url)
     end
   end

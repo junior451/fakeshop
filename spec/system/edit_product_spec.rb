@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Edit Product', type: :system do
   it "allows product details to be edited" do
+    login
+    
     product = create(:product)
 
     visit products_path

@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
   include CurrentCart
-
+  
+  before_action :authorize
   before_action :set_product, only: [:show, :edit, :update, :destroy, :who_bought]
   
   def index

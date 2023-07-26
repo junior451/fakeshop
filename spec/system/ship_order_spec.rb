@@ -5,6 +5,8 @@ RSpec.describe 'Ship Order', type: :system do
     order = create(:order, ship_date: nil)
     line_item = create(:line_item, order_id: order.id, quantity: 3)
 
+    login
+
     visit orders_path
 
     expect(page.body).to include(order.name)

@@ -7,7 +7,7 @@ class SessionController < ApplicationController
 
     respond_to do |format|
       if user&.authenticate(login_params[:password])
-        session[:id] = user.id
+        session[:user_id] = user.id
         
         format.html { redirect_to admin_url, notice: 'Successfully logged In' }
         format.json { render json: { message: "Logged In as admin" }, status: 200 }
@@ -19,7 +19,7 @@ class SessionController < ApplicationController
   end
 
   def logout
-    session[:id] = nil
+    session[:user_id] = nil
     redirect_to login_url, notice: "logged out"
   end
 

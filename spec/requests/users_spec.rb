@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
+  before do
+    login
+  end
+
   describe "new" do
     before do
       get "/users/new"
@@ -28,8 +32,8 @@ RSpec.describe "Users", type: :request do
       end
 
       it "creates a new user" do
-        expect(User.count).to eq 1
-        expect(User.first.username).to eq("username_23")
+        expect(User.count).to eq 2
+        expect(User.second.username).to eq("username_23")
       end
   
       it "redirects to the admin home page" do
@@ -49,22 +53,18 @@ RSpec.describe "Users", type: :request do
     end
     
     context "when username already exists" do
-      let(:user)  { create(:user) }
-
-      it "doesn't create a new user and it notifies the user to use another username" do
-        invalid_user_info = { user: { username: user.username, password: "my_password" } }
+      before do
+        invalid_user_info = { user: { username: User.first.username, password: User.first.password } }
 
         post "/users", params: invalid_user_info
+      end
 
+      it "doesn't create a new user and it notifies the user to use another username" do
         expect(response.body).to include("Username has already been taken")
         expect(User.count).to eq 1
       end
 
       it "renders the new page" do
-        invalid_user_info = { user: { username: user.username, password: "my_password" } }
-
-        post "/users", params: invalid_user_info
-
         expect(response).to render_template(:new)
       end
     end
@@ -122,7 +122,7 @@ RSpec.describe "Users", type: :request do
       end
 
       it "changes the username of the user" do
-        expect(User.first.username).to eq("new_username")
+        expect(User.second.username).to eq("new_username")
       end
 
       it "redirects to users page" do
@@ -142,10 +142,9 @@ RSpec.describe "Users", type: :request do
 
     context "when the username already exist" do
       it "doesn't change the username and responds with an error message" do
-        user = create(:user, username: "user21")
-        user2 = create(:user, username: "user25")
+        user2 = create(:user, username: "user21")
 
-        put "/users/#{user2.id}", params: { user: { username: user.username } }
+        put "/users/#{user2.id}", params: { user: { username: User.first.username } }
 
         expect(response).to render_template(:edit)
         expect(response.body).to include("Username has already been taken")
@@ -157,7 +156,7 @@ RSpec.describe "Users", type: :request do
 
   describe "deleting a user" do
     let(:users) {
-      build_list(:user, 3) do |record,i| 
+      build_list(:user, 2) do |record,i| 
         record.username = record.username + i.to_s
         record.save!
       end
@@ -190,9 +189,7 @@ RSpec.describe "Users", type: :request do
 
     context "when there only one user exist" do
       it "should not delete the user and respond with a message" do
-        user = create(:user)
-
-        delete "/users/#{user.id}"
+        delete "/users/#{User.first.id}"
 
         expect(response).to redirect_to(users_path)
 

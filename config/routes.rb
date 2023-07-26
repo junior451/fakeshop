@@ -18,6 +18,6 @@ Rails.application.routes.draw do
   controller :session do
     get "login" => :new
     post "login" => :create
-    get "logout" => :logout
+    delete "logout" => :logout
   end
 end

@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "Orders", type: :request do
+  before do
+    login
+  end
+
   describe "/new" do
     it "doesnt allow the creation of new orders if cart is empty" do
       get new_order_url

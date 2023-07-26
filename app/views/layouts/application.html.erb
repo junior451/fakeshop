@@ -24,8 +24,25 @@
           <li><a href="/news">News</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
-        <%= DateTime.now.to_s(:db) %>
+        
+        <% if session[:user_id] %>
+          <nav class="logged_in_or_logged_out">
+            <ul>
+              <li><%= link_to 'Admin Home', admin_path %></li>
+              <li><%= link_to 'Orders',   orders_path %></li>
+              <li><%= link_to 'Products', products_path %></li>
+              <li><%= link_to 'Users',    users_path %></li>
+              <li><%= button_to 'Logout', logout_path, method: :delete %></li>
+            </ul>
+          </nav> 
+        <% else %>
+          <nav class="logged_in_or_logged_out">
+            <ul>
+              <li><%= link_to 'login', login_path %></li>
+          </nav> 
+        <% end %>
       </nav>
+
       <main class='<%= controller.controller_name %>'>
         <%= yield %>
       </main>

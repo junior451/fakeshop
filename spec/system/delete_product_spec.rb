@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Delete Product', type: :system do
   it "allows products to be deleted" do
+    login
+    
     product = create(:product)
 
     visit products_path
