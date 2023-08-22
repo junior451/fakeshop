@@ -21,7 +21,7 @@ RSpec.describe "Sessions", type: :request do
 
       follow_redirect!
 
-      expect(response.body).to include("Successfully logged In")
+      expect(response.body).to include("Successfully Logged In")
       expect(response.body).to include("Welcome Admin")
       expect(response.status).to eq 200
     end
@@ -47,7 +47,7 @@ RSpec.describe "Sessions", type: :request do
       login_with_valid_user
 
       expect(session[:user_id]).to eq User.first.id
-      
+
       delete "/logout"
 
       expect(session[:user_id]).to be_nil

@@ -9,7 +9,7 @@ class SessionController < ApplicationController
       if user&.authenticate(login_params[:password])
         session[:user_id] = user.id
         
-        format.html { redirect_to admin_url, notice: 'Successfully logged In' }
+        format.html { redirect_to admin_url, notice: 'Successfully Logged In' }
         format.json { render json: { message: "Logged In as admin" }, status: 200 }
       else
         format.html { redirect_to login_url, alert: "Invalid username or password"}
