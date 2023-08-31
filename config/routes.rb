@@ -13,7 +13,10 @@ Rails.application.routes.draw do
   end
 
   resources :carts
-  resources :users
+  resources :users do
+    get :edit_password, on: :member
+    put :password_update, on: :member, as: "update_password"
+  end
 
   controller :session do
     get "login" => :new

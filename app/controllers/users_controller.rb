@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorize
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, only: [:edit, :update, :destroy, :edit_password, :password_update]
 
   def index
     @users = User.order(:username)
@@ -30,6 +30,9 @@ class UsersController < ApplicationController
   def edit
   end
 
+  def edit_password
+  end
+
   def update
     respond_to do |format|
       if @user.update(user_params)
@@ -37,6 +40,19 @@ class UsersController < ApplicationController
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def password_update
+    respond_to do |format|
+      if @user.authenticate(password_params[:current_password])
+        @user.update(password: password_params[:new_password])
+        format.html { redirect_to users_path, notice: "Password for user#{@user.id} was changed" }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { redirect_to edit_password_user_path, notice: "Current password not provided or incorrect" }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -68,5 +84,9 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:username, :password, :password_confirmation)
+  end
+
+  def password_params
+    params.require(:user).permit(:current_password, :new_password)
   end
 end
