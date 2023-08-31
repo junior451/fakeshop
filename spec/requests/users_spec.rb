@@ -125,7 +125,6 @@ RSpec.describe "Users", type: :request do
     end
   
     describe "editing a user's username" do
-      
       context "when the new username doesn't already exist" do
         let(:user) { create(:user, username: "user1") }
         let(:valid_params) { { user: { username: "new_username" } } }
@@ -166,6 +165,51 @@ RSpec.describe "Users", type: :request do
         end
       end
     end
+
+    describe "updating a user's password" do
+      let(:user) { create(:user, username: "new_user") }
+
+      context "when current password is provided" do
+        it "allows the password to be changed" do
+          #expect { put "/users/#{user.id}/password_update", params: {user: { current_password: "my_password", new_password: "new_password" }} }.to change(user, :password).to "new_password"
+
+          put "/users/#{user.id}/password_update", params: {user: { current_password: "my_password", new_password: "new_password" }}
+
+          expect(response).to redirect_to(users_path)
+
+          follow_redirect!
+
+          expect(response.body).to include("Password for user#{user.id} was changed")
+        end
+      end
+
+      context "when current password is not provided" do
+        it "re renders the edit password page with errors" do
+          put "/users/#{user.id}/password_update", params: {user: { current_password: "", new_password: "new_password" }}
+
+          expect(response).to redirect_to(edit_password_user_path)
+
+          follow_redirect!
+  
+          expect(response).to render_template(:edit_password)
+          expect(response.body).to include("Current password not provided or incorrect")
+        end
+      end
+
+      context "when current password is incorrect" do
+        it "re renders the edit password page with errors" do
+          put "/users/#{user.id}/password_update", params: {user: { current_password: "incorrect_password", new_password: "new_password" }}
+
+          expect(response).to redirect_to(edit_password_user_path)
+
+          follow_redirect!
+  
+          expect(response).to render_template(:edit_password)
+          expect(response.body).to include("Current password not provided or incorrect")
+        end
+      end
+    end
+
   
     describe "deleting a user" do
       let(:users) {
